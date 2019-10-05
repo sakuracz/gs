@@ -2,6 +2,7 @@
 #include "parser.hpp"
 #include <string>
 #include <fstream>
+#include <stdio.h>
 
 using namespace std;
 using namespace testing;
@@ -29,6 +30,15 @@ private:
         outFile.is_open();
     };
     ofstream outFile;
+public:
+    void SetUp()
+    {
+        generateInputFile();
+    }
+    void TearDown()
+    {
+        remove(fileName.c_str());
+    }
 };
 
 TEST_F(SmallFileParserTestSuite, dummy)
@@ -50,7 +60,7 @@ TEST_F(SmallFileParserTestSuite, returnsFalseWhileTryingToOpenNonexistingFile)
 TEST_F(SmallFileParserTestSuite, returnsTrueWhilstOpeningEmptyFile)
 {
     Parser sut{};
-    ASSERT_TRUE(sut.openTickFile("herpderp"));
+    ASSERT_TRUE(sut.openTickFile("herpDerp.dat"));
 }
 
 int main(int argc, char **argv)
