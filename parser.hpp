@@ -85,10 +85,10 @@ public:
 private:
     double calculateProduct(const vector<double>& vals, const string& field1, const string& field2)
     {
-        if((fieldToIdx.find(field1) != fieldToIdx.end())                        //this monstrosity checks a couple of things: 1) was the requested fieled present in the input file at all?
-                && (vals.size() >= fieldToIdx[field1])                          //2) is the current vector of values large enought to have the contain the values for 'field1' - the vectors grow anytime a new field is encoutered in the source file
+        if((fieldToIdx.find(field1) != fieldToIdx.end())                        //this monstrosity checks a couple of things: 1) was the requested field present in the input file at all?
+                && (vals.size() >= fieldToIdx[field1])                          //2) is the current vector of values large enought to contain the values for 'field1' - the vectors grow anytime a new field is encoutered in the source file
                 && (fieldToIdx.find(field2) != fieldToIdx.end())                //3) same as 1) but for field2
-                && (vals.size() >= fieldToIdx[field2])                          //4) same as 2) but for field2 (the ordering of these conditions can have impact on performancebut i couldn't be bothered with that)
+                && (vals.size() >= fieldToIdx[field2])                          //4) same as 2) but for field2 (the ordering of these conditions can have impact on performance but i couldn't be bothered with that)
                 && (!isnan(vals[fieldToIdx[field1]]))                           //5) checks if the 'matrix-element' corresponding to [time,field1] is not NaN
                 && (!isnan(vals[fieldToIdx[field2]])))                          //6) checks if the 'matrix-element' corresponding to [time,field2] is not NaN
         {
