@@ -29,12 +29,14 @@ struct SymbolTable
 class Parser : public IParser
 {
 public:
-    Parser() : fieldToIdx(100u), symbolDict(100u){};
+    Parser() : fieldToIdx(100u), symbolDict(100u){}; //the size is most likely a bit of a stretch
     bool openTickFile(string fName) override
     {
         data = ifstream(fName, std::ios::in);
         readInData();
-        return data.is_open();
+        auto wasOpened = data.is_open();
+        data.close();
+        return wasOpened;
     }
     void print(time_t startTime, time_t endTime, string symbol) override
     {
@@ -56,33 +58,31 @@ public:
             }
         }
     }
-    void printValueVector(const vector<double>& chu)
+    void printValueVector(const vector<double>& vals)
     {
-        stringstream output{};
         string coma="";
-        for(auto i = 0u; i < chu.size(); ++i)
-            if(!isnan(chu[i]))
+        for(auto i = 0u; i < vals.size(); ++i)
+            if(!isnan(vals[i]))
             {
-                output << coma << fieldNames[i] << ":" << std::fixed << std::setprecision(3) << chu[i];
+                cout << coma << fieldNames[i] << ":" << std::fixed << std::setprecision(3) << vals[i];
                 coma = ",";
             }
-        cout << output.str();
     }
     void product(time_t startTime, time_t endTime, string symbol, string field1, string field2) override
     {
         cout << "54.000";
     }
 private:
-    void readInData()
+    void readInData() //this method (as well as all the consumations) makes me sad :(. This could proly be a one-liner with spirit
     {
         string line;
         while(getline(data, line, '\n'))
         {
             time_t timeStamp = consumeTime(line);
             string symbol = consumeString(line);
-            vector<double> fieldVals = consumeFields(line);
-            if(symbolDict.find(symbol) == symbolDict.end()) //symbol not yet encountered
+            if(symbolDict.find(symbol) == symbolDict.end()) //symbol not yet encountered case
             {
+                vector<double> fieldVals = consumeFields(line);
                 symbolDict.insert(symbol);
                 vector<vector<double>> herp{};
                 vector<time_t> derp{};
