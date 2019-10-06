@@ -68,14 +68,15 @@ public:
             auto rangeBeg = (startTime < times[0] ? times.begin() : find_if(times.begin(), times.end(), [&](auto& a){return a >= startTime;}) ) ;
             auto rangeEnd = (endTime > times.back() ? times.end() : find_if(rangeBeg, times.end(), [&](auto& a){return a+1 > endTime;}) ) ;
 
+            double product{0};
             if((rangeBeg != times.end()) && (rangeBeg < rangeEnd))
             {
-                double product{0};
                 const auto& vals = symbolTables[symbol].values;
                 for(auto it = vals.begin()+distance(times.begin(), rangeBeg);
                          it != vals.begin()+distance(times.begin(), rangeEnd);
                          ++it)
                 {
+                    cerr << "*it[0] = *it[0]" << (*it)[0] << "\n";
                     product += calculateProduct(*it, field1, field2);
                 }
                 cout << std::fixed << std::setprecision(3) << product;
