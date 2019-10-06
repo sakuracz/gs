@@ -48,7 +48,7 @@ public:
             auto rangeBeg = (startTime < times[0] ? times.begin() : find_if(times.begin(), times.end(), [&](auto& a){return a >= startTime;}) ) ;
             auto rangeEnd = (endTime > times.back() ? times.end() : find_if(rangeBeg, times.end(), [&](auto& a){return a+1 > endTime;}) ) ;
 
-            if(rangeBeg != times.end() )
+            if((rangeBeg != times.end()) && (rangeBeg < rangeEnd))
             {
                 const auto& vals = symbolTables[symbol].values;
                 for(auto it = vals.begin()+distance(times.begin(), rangeBeg);
@@ -68,7 +68,7 @@ public:
             auto rangeBeg = (startTime < times[0] ? times.begin() : find_if(times.begin(), times.end(), [&](auto& a){return a >= startTime;}) ) ;
             auto rangeEnd = (endTime > times.back() ? times.end() : find_if(rangeBeg, times.end(), [&](auto& a){return a+1 > endTime;}) ) ;
 
-            if(rangeBeg != times.end() )
+            if((rangeBeg != times.end()) && (rangeBeg < rangeEnd))
             {
                 double product{0};
                 const auto& vals = symbolTables[symbol].values;
@@ -106,14 +106,14 @@ private:
                 coma = ",";
             }
     }
-    void readInData() //this method (as well as all the consumations) makes me sad :(. This could proly be a one-liner with spirit
+    void readInData()                                                           //this method (as well as all the consumations) makes me sad :(. This could proly be a one-liner with spirit
     {
         string line;
         while(getline(data, line, '\n'))
         {
             time_t timeStamp = consumeTime(line);
             string symbol = consumeString(line);
-            if(symbolDict.find(symbol) == symbolDict.end()) //symbol not yet encountered case
+            if(symbolDict.find(symbol) == symbolDict.end())                     //symbol not yet encountered case
             {
                 vector<double> fieldVals = consumeFields(line);
                 symbolDict.insert(symbol);
@@ -122,6 +122,14 @@ private:
                 derp.push_back(timeStamp);
                 herp.push_back(fieldVals);
                 symbolTables.emplace(symbol, SymbolTable{derp, herp});
+            }
+            else                                                                //symbol-specific vector already exists
+            {
+                auto& times = symbolTables.at(symbol).timestamps;
+                auto& values = symbolTables.at(symbol).values;
+                vector<double> fieldVals = consumeFields(line);
+                times.push_back(timeStamp);
+                values.push_back(fieldVals);
             }
         }
     }
