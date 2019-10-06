@@ -7,10 +7,12 @@
 #include <algorithm>
 #include <fstream>
 #include <cmath>
+#include <utility>
 
 using namespace std;
 using FieldToIdxMap = unordered_map<string, unsigned>;
 using SymbolDict = unordered_set<string>;
+using Range = pair<unsigned, unsigned>;
 
 class IParser
 {
@@ -58,6 +60,42 @@ public:
             }
         }
     }
+    void product(time_t startTime, time_t endTime, string symbol, string field1, string field2) override
+    {
+        if(symbolDict.find(symbol) != symbolDict.end())
+        {
+            const auto& times = symbolTables[symbol].timestamps;
+            auto rangeBeg = (startTime < times[0] ? times.begin() : find_if(times.begin(), times.end(), [&](auto& a){return a >= startTime;}) ) ;
+            auto rangeEnd = (endTime > times.back() ? times.end() : find_if(rangeBeg, times.end(), [&](auto& a){return a+1 > endTime;}) ) ;
+
+            if(rangeBeg != times.end() )
+            {
+                double product{0};
+                const auto& vals = symbolTables[symbol].values;
+                for(auto it = vals.begin()+distance(times.begin(), rangeBeg);
+                         it != vals.begin()+distance(times.begin(), rangeEnd);
+                         ++it)
+                {
+                    product += calculateProduct(*it, field1, field2);
+                }
+                cout << std::fixed << std::setprecision(3) << product;
+            }
+        }
+    }
+private:
+    double calculateProduct(const vector<double>& vals, const string& field1, const string& field2)
+    {
+        if((fieldToIdx.find(field1) != fieldToIdx.end())                        //this monstrosity checks a couple of things: 1) was the requested fieled present in the input file at all?
+                && (vals.size() >= fieldToIdx[field1])                          //2) is the current vector of values large enought to have the contain the values for 'field1' - the vectors grow anytime a new field is encoutered in the source file
+                && (fieldToIdx.find(field2) != fieldToIdx.end())                //3) same as 1) but for field2
+                && (vals.size() >= fieldToIdx[field2])                          //4) same as 2) but for field2 (the ordering of these conditions can have impact on performancebut i couldn't be bothered with that)
+                && (!isnan(vals[fieldToIdx[field1]]))                           //5) checks if the 'matrix-element' corresponding to [time,field1] is not NaN
+                && (!isnan(vals[fieldToIdx[field2]])))                          //6) checks if the 'matrix-element' corresponding to [time,field2] is not NaN
+        {
+            return vals[fieldToIdx[field1]]*vals[fieldToIdx[field2]];
+        }
+        return 0.0;
+    }
     void printValueVector(const vector<double>& vals)
     {
         string coma="";
@@ -68,11 +106,6 @@ public:
                 coma = ",";
             }
     }
-    void product(time_t startTime, time_t endTime, string symbol, string field1, string field2) override
-    {
-        cout << "54.000";
-    }
-private:
     void readInData() //this method (as well as all the consumations) makes me sad :(. This could proly be a one-liner with spirit
     {
         string line;
@@ -135,9 +168,9 @@ private:
             }
             else
             {
+                fieldToIdx.insert({fieldName, fieldVals.size()});
                 fieldVals.push_back(fieldValue);
                 fieldNames.push_back(fieldName);
-                fieldToIdx.insert({fieldName, fieldValue});
             }
         }
         return fieldVals;

@@ -80,7 +80,7 @@ struct SmallFileParserProductParamTestSuite : SmallFileParserTestSuite,
 
 INSTANTIATE_TEST_CASE_P(ProductTest, SmallFileParserProductParamTestSuite,
                        Values(ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f1", "f2", "54.000"},
-                              ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f2", "f3", "72.000"},
+                              ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f2", "f3", "108.000"},
                               ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f1", "f4", "60.000"},
                               ProductParam{T_STAMP-1, T_STAMP+1, "s2", "f1", "f4", ""},
                               ProductParam{T_STAMP+1, T_STAMP+2, "s1", "f1", "f2", ""}));
