@@ -109,10 +109,10 @@ struct SmallFileParserPrintParamTestSuite : SmallFileParserTestSuite,
 {};
 
 INSTANTIATE_TEST_CASE_P(PrintTest, SmallFileParserPrintParamTestSuite,
-                        Values(PrintParam{T_STAMP-1, T_STAMP+1, "s1", "f1:6.000,f2:9.000,f3:12.000,f4:10.000"},
+                        Values(PrintParam{T_STAMP-1, T_STAMP+1, "s1", "f1:6.000,f2:9.000,f3:12.000,f4:10.000\n"},
                                PrintParam{T_STAMP-1, T_STAMP+1, "s2", ""},
                                PrintParam{T_STAMP+1, T_STAMP+2, "s1", ""},
-                               PrintParam{T_STAMP-1, T_STAMP+11, "s1", "f1:6.000,f2:9.000,f3:12.000,f4:10.000f1:7.000,f2:10.000,f3:13.000,f4:11.000"}));
+                               PrintParam{T_STAMP-1, T_STAMP+11,"s1", "f1:6.000,f2:9.000,f3:12.000,f4:10.000\nf1:7.000,f2:10.000,f3:13.000,f4:11.000\n"}));
 
 TEST_P(SmallFileParserPrintParamTestSuite, expectSpecificPrint)
 {

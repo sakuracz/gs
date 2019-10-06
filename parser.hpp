@@ -106,6 +106,7 @@ private:
                 cout << coma << fieldNames[i] << ":" << std::fixed << std::setprecision(3) << vals[i];
                 coma = ",";
             }
+        cout << "\n";
     }
     void readInData()                                                           //this method (as well as all the consumations) makes me sad :(. This could proly be a one-liner with spirit
     {
