@@ -14,7 +14,7 @@ using FieldToIdxMap = unordered_map<string, unsigned>;
 using SymbolDict = unordered_set<string>;
 using Range = pair<unsigned, unsigned>;
 
-class IParser
+class IParser //interface to parsers that will can be swapped polimorphicaly on demand
 {
 public:
    virtual bool openTickFile(string) = 0;
@@ -95,7 +95,6 @@ public:
                          it != vals.begin()+distance(times.begin(), rangeEnd);
                          ++it)
                 {
-                    cerr << "*it[0] = *it[0]" << (*it)[0] << "\n";
                     product += calculateProduct(*it, field1, field2);
                 }
                 cout << std::fixed << std::setprecision(3) << product;
