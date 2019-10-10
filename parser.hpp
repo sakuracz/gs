@@ -112,7 +112,7 @@ private:
                 && (!isnan(vals[fieldToIdx[field1]]))                           //5) checks if the 'matrix-element' corresponding to [time,field1] is not NaN
                 && (!isnan(vals[fieldToIdx[field2]])))                          //6) checks if the 'matrix-element' corresponding to [time,field2] is not NaN
         {
-            return vals[fieldToIdx[field1]]*vals[fieldToIdx[field2]];           //inner_product() perhaps some day?
+            return vals[fieldToIdx[field1]]*vals[fieldToIdx[field2]];           //inner_product() perhaps some day if operation should be generic?
         }
         return 0.0;
     }

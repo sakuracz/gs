@@ -195,9 +195,9 @@ struct LargeInputFileParserParametricPerformanceTestSuite : GenericParserTestSui
 };
 
 INSTANTIATE_TEST_CASE_P(PerfTest, LargeInputFileParserParametricPerformanceTestSuite,
-                        Values(PerfParam{1024, T_STAMP+10, T_STAMP+100, "s1", "", ""},
-                               PerfParam{1024*1024, T_STAMP+100, T_STAMP+1000, "s1", "", ""},
-                               PerfParam{1024*1024*512, T_STAMP+1000, T_STAMP+100000, "s1", "", ""}));
+                        Values(PerfParam{1024, T_STAMP+10, T_STAMP+100, "s1", "", ""},                  //  1 kiB
+                               PerfParam{1024*1024, T_STAMP+100, T_STAMP+1000, "s1", "", ""},           //  1 MiB
+                               PerfParam{1024*1024*512, T_STAMP+1000, T_STAMP+100000, "s1", "", ""}));  //512 MiB
 
 TEST_P(LargeInputFileParserParametricPerformanceTestSuite, performLargePrintsTests)
 {
