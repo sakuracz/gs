@@ -86,13 +86,13 @@ struct SmallFileParserProductParamTestSuite : GenericParserTestSuite,
 {};
 
 INSTANTIATE_TEST_CASE_P(ProductTest, SmallFileParserProductParamTestSuite,
-                       Values(ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f1", "f2", "54.000"},
-                              ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f2", "f3", "108.000"},
-                              ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f1", "f4", "60.000"},
+                       Values(ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f1", "f2", "54.000\n"},
+                              ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f2", "f3", "108.000\n"},
+                              ProductParam{T_STAMP-1, T_STAMP+1, "s1", "f1", "f4", "60.000\n"},
                               ProductParam{T_STAMP-1, T_STAMP+1, "s2", "f1", "f4", ""},
                               ProductParam{T_STAMP+1, T_STAMP+2, "s1", "f1", "f2", ""},
-                              ProductParam{T_STAMP-1, T_STAMP+11,"s1", "f1", "f2", "124.000"},
-                              ProductParam{T_STAMP-1, T_STAMP+21,"s1", "f1", "f2", "124.000"}));
+                              ProductParam{T_STAMP-1, T_STAMP+11,"s1", "f1", "f2", "124.000\n"},
+                              ProductParam{T_STAMP-1, T_STAMP+21,"s1", "f1", "f2", "124.000\n"}));
 
 TEST_P(SmallFileParserProductParamTestSuite, expectSpecificProduct)
 {
@@ -155,7 +155,7 @@ struct LargeInputFileParserParametricPerformanceTestSuite : GenericParserTestSui
         mt19937 randValueEngine(rDev());
         uniform_int_distribution<unsigned> randTime(0, 10);                      //time increments
         uniform_int_distribution<unsigned> randSymbol(0, 9);
-        uniform_int_distribution<unsigned> randField(1, 1024);                   //the binary rep determines which field is present from the field table
+        uniform_int_distribution<unsigned> randField(1, 1023);                   //the binary rep determines which field is present from the field table
 
         normal_distribution<> randValue(15.0, 5.0);
 
@@ -195,8 +195,8 @@ struct LargeInputFileParserParametricPerformanceTestSuite : GenericParserTestSui
 };
 
 INSTANTIATE_TEST_CASE_P(PerfTest, LargeInputFileParserParametricPerformanceTestSuite,
-                        Values(PerfParam{1024, T_STAMP-1, T_STAMP+1, "s1", "", ""},
-                               PerfParam{1024*1024, T_STAMP-1, T_STAMP+1, "s1", "", ""},
+                        Values(PerfParam{1024, T_STAMP+10, T_STAMP+100, "s1", "", ""},
+                               PerfParam{1024*1024, T_STAMP+100, T_STAMP+1000, "s1", "", ""},
                                PerfParam{1024*1024*512, T_STAMP+1000, T_STAMP+100000, "s1", "", ""}));
 
 TEST_P(LargeInputFileParserParametricPerformanceTestSuite, performLargePrintsTests)

@@ -2,6 +2,8 @@
 #include <iostream>
 #include <time.h>
 #include <unordered_map>
+#include <map>
+#include <iomanip>
 #include <unordered_set>
 #include <vector>
 #include <algorithm>
@@ -14,7 +16,7 @@ using FieldToIdxMap = unordered_map<string, unsigned>;
 using SymbolDict = unordered_set<string>;
 using Range = pair<unsigned, unsigned>;
 
-class IParser //interface to parsers that will can be swapped polimorphicaly on demand
+class IParser //interface to parsers that can be swapped polimorphicaly on demand
 {
 public:
    virtual bool openTickFile(string) = 0;
@@ -27,7 +29,6 @@ struct SymbolTable
     vector<time_t> timestamps;
     vector<vector<double>> values;
 };
-
 
 /* Desc: the underlying data structure for the problem at hand can be considered to be a tensor of rank 3 with dimensions [K x L x M]
  * , where K is the number of unique symbols, L the number of timestamps (not neccesarily unique) and M the number of fields. It
@@ -97,7 +98,7 @@ public:
                 {
                     product += calculateProduct(*it, field1, field2);
                 }
-                cout << std::fixed << std::setprecision(3) << product;
+                cout << std::fixed << std::setprecision(3) << product << "\n";
             }
         }
     }
@@ -111,7 +112,7 @@ private:
                 && (!isnan(vals[fieldToIdx[field1]]))                           //5) checks if the 'matrix-element' corresponding to [time,field1] is not NaN
                 && (!isnan(vals[fieldToIdx[field2]])))                          //6) checks if the 'matrix-element' corresponding to [time,field2] is not NaN
         {
-            return vals[fieldToIdx[field1]]*vals[fieldToIdx[field2]];
+            return vals[fieldToIdx[field1]]*vals[fieldToIdx[field2]];           //inner_product() perhaps some day?
         }
         return 0.0;
     }
@@ -209,4 +210,25 @@ private:
     SymbolDict symbolDict;
     vector<string> fieldNames{};
     map<string, SymbolTable> symbolTables;
+};
+
+class ProductParser : public Parser
+{
+public:
+    ProductParser()
+    {
+        cout << "Parser for optimized product operation selected" << endl;      //one day i'll get to it
+    }
+    /*it could be better to specialize each method in their dedicated class and encapsulate
+     *them in one facade object - goes on the TODO list
+     * */
+};
+
+class PrintParser : public Parser
+{
+public:
+    PrintParser()
+    {
+        cout << "Parser for optimized printing operation selected" << endl;     //implementation waiting for better days
+    }
 };
