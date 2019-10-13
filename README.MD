@@ -1,4 +1,4 @@
-# gs
+## gs
 1. To build test suite:  
    `g++ --std=c++14 tests.cpp -lgtest -lgtest_main -lpthread -o parser_GT`  
    - run:  
@@ -9,7 +9,7 @@
    - run:   
    `./parser`  
   
-# Lucernam olet. 
+### Lucernam olet. 
 General appraisal (from parser.hpp):
 
 The underlying data structure for the problem at hand can be considered to be a tensor of rank 3 with dimensions [KxLxM],  
@@ -24,11 +24,11 @@ and also here: (Scott Meyers always fun to watch)
 Due to the above mentioned facts, it is most advantageous to work on vectors (chosen here) or arrays.
 The two required optimization options entail their specific considerations:  
 
-   -Oprint) the vector of vectors structure used should already be pretty friendly. The assembly of print buffers could be parallelized,
-            though.  
+> **-Oprint**) the vector of vectors structure used should already be pretty friendly. The assembly of print buffers could be parallelized,
+> though.  
 
-   -Oproduct) efficient use of cache requires matrix transposition to [M x N] form but also product calculations are easily parallelized
-              into multiple threads (nice linear scaling) as long as thread local data is used for partial product calculation. SSE2
-              instructions accessed via compiler intrinsics could also help boost performance of doubles - however, availabiliy of those
-              is hardware specific.
+> **-Oproduct**) efficient use of cache requires matrix transposition to [M x N] form but also product calculations are easily parallelized
+> into multiple threads (nice linear scaling) as long as thread local data is used for partial product calculation. SSE2
+> instructions accessed via compiler intrinsics could also help boost performance of doubles - however, availabiliy of those
+> is hardware specific.
 
