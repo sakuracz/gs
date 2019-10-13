@@ -2,8 +2,8 @@
 1. To build test suite:  
    `g++ --std=c++14 tests.cpp -lgtest -lgtest_main -lpthread -o parser_GT`  
    - run:  
-   `./parser_GT` //parametric performance test for 512MiB input file takes > 4min - should be commented out in the interest of time  
-                 //generally, file I/O are a huge bottleneck - processing could be done in parallel to some extent  
+   `./parser_GT` //parametric performance test for 512MiB input file takes > 4min - should be commented out in the interest of time; 
+   generally, file I/O are a huge bottleneck - processing could be done in parallel to some extent  
 2. To build application:  
    `g++ --std=c++14 main.cpp -o parser`  
    - run:   
@@ -12,7 +12,7 @@
 # Lucernam olet. 
 General appraisal (from parser.hpp):
 
-Desc: the underlying data structure for the problem at hand can be considered to be a tensor of rank 3 with dimensions [K x L x M],  
+Desc: the underlying data structure for the problem at hand can be considered to be a tensor of rank 3 with dimensions [KxLxM],  
 where K is the number of unique symbols, L the number of timestamps (not neccesarily unique) and M the number of fields. It
 is also equivalent to a problem of K independent L by M  matirces - this approach is also what is implemented in the code below
 as the data corresponding to different symbols is unrelated to each other - this helps to preserve locality of the data structure
