@@ -7,9 +7,9 @@
    //parametric performance test for 512MiB input file takes > 2 min - should be commented out in the interest of time; 
    generally, file I/O are a huge bottleneck - processing could be done in parallel to some extent  
 2. Plot creation:  
-   `gnuplot plots.gnu` //outputs plots in .eps format
-   Example output:
-![testing feature](/fig1.eps?raw=true&sanitize=true "Fig. 1. Size vs time")
+   `gnuplot plots.gnu` //outputs plots in .eps format  
+   Example output:  
+   ![testing feature](/fig1.eps?raw=true&sanitize=true "Fig. 1. Size vs time")
 3. To build application:  
    `g++ --std=c++14 main.cpp -o parser`  
    - run:   
