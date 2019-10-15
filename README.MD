@@ -7,7 +7,7 @@
    //parametric performance test for 512MiB input file takes > 2 min - should be commented out in the interest of time; 
    generally, file I/O are a huge bottleneck - processing could be done in parallel to some extent  
 2. Plot creation:  
-   `gnuplot plots.gnu` //outputs plots in .eps format  
+   `gnuplot plots.gnu` //outputs plots in .svg format  
    Example output:  
    ![Figure 1](/fig1.svg?raw=true&sanitize=true "Fig. 1. Size vs time")
 3. To build application:  
