@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <random>
+#include <chrono>
 
 using namespace std;
 using namespace testing;
@@ -143,8 +144,7 @@ struct PerfParam
     string field2;
 };
 
-struct LargeInputFileParserParametricPerformanceTestSuite : GenericParserTestSuite,
-                                                            WithParamInterface<PerfParam>
+struct LargeFileWriterTestSuite : GenericParserTestSuite
 {
     virtual void writeInData(size_t byteCount) override
     {
@@ -186,7 +186,14 @@ struct LargeInputFileParserParametricPerformanceTestSuite : GenericParserTestSui
             byteCount -= line.str().size();
         }
     }
+};
 
+struct LargeInputFileParserParametricPerformanceTestSuite : LargeFileWriterTestSuite,
+                                                            WithParamInterface<PerfParam>
+{
+    LargeInputFileParserParametricPerformanceTestSuite()
+    {
+    }
     virtual void TearDown() override
     {
         //remove(fileName.c_str());
@@ -195,9 +202,17 @@ struct LargeInputFileParserParametricPerformanceTestSuite : GenericParserTestSui
 };
 
 INSTANTIATE_TEST_CASE_P(PerfTest, LargeInputFileParserParametricPerformanceTestSuite,
-                        Values(PerfParam{1024, T_STAMP+10, T_STAMP+100, "s1", "", ""},                  //  1 kiB
-                               PerfParam{1024*1024, T_STAMP+100, T_STAMP+1000, "s1", "", ""},           //  1 MiB
-                               PerfParam{1024*1024*512, T_STAMP+1000, T_STAMP+100000, "s1", "", ""}));  //512 MiB
+                        Values(PerfParam{1024,          T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     //  1 kiB
+                               PerfParam{1024*4,        T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     //  4 kiB
+                               PerfParam{1024*16,       T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     // 16 kiB
+                               PerfParam{1024*64,       T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     // 64 kiB
+                               PerfParam{1024*256,      T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     //256 kiB
+                               PerfParam{1024*1024,     T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     //  1 MiB
+                               PerfParam{1024*1024*4,   T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     //  4 MiB
+                               PerfParam{1024*1024*16,  T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     // 16 MiB
+                               PerfParam{1024*1024*64,  T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     // 64 MiB
+                               PerfParam{1024*1024*256, T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"},     //256 MiB
+                               PerfParam{1024*1024*512, T_STAMP+10, T_STAMP*2, "s1", "f0", "f1"}));   //512 MiB
 
 TEST_P(LargeInputFileParserParametricPerformanceTestSuite, performLargePrintsTests)
 {
@@ -206,8 +221,22 @@ TEST_P(LargeInputFileParserParametricPerformanceTestSuite, performLargePrintsTes
     generateInputFile(param.fileSize);
 
     Parser sut{};
+    auto readStart = std::chrono::system_clock::now();
     ASSERT_TRUE(sut.openTickFile("perf.dat"));
+    auto readEnd = std::chrono::system_clock::now();
+    auto readTime = std::chrono::duration_cast<std::chrono::nanoseconds>(readEnd - readStart);
+
+    auto printStart = std::chrono::system_clock::now();
     sut.print(param.rangeStart, param.rangeEnd, param.symbol);
+    auto printEnd = std::chrono::system_clock::now();
+    auto printTime = std::chrono::duration_cast<std::chrono::nanoseconds>(printEnd - printStart);
+
+    auto productStart = std::chrono::system_clock::now();
+    sut.product(param.rangeStart, param.rangeEnd, param.symbol, param.field1, param.field2);
+    auto productEnd = std::chrono::system_clock::now();
+    auto productTime = std::chrono::duration_cast<std::chrono::nanoseconds>(productEnd - productStart);
+
+    cerr << param.fileSize << "\t" << readTime.count() << "\t" << printTime.count() << "\t" << productTime.count() << endl;
 }
 
 int main(int argc, char **argv)

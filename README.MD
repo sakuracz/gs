@@ -2,12 +2,17 @@
 1. To build test suite:  
    `g++ --std=c++14 tests.cpp -lgtest -lgtest_main -lpthread -o parser_GT`  
    - run:  
-   `./parser_GT` //parametric performance test for 512MiB input file takes > 4min - should be commented out in the interest of time; 
+   `./parser_GT 2> profile.out`  
+   //redirects time measurements from stderr to file 'profile.out' 
+   //parametric performance test for 512MiB input file takes > 2 min - should be commented out in the interest of time; 
    generally, file I/O are a huge bottleneck - processing could be done in parallel to some extent  
-2. To build application:  
+2. Plot creation:
+   `gnuplot plots.gnu` //outputs plots in .eps format
+3. To build application:  
    `g++ --std=c++14 main.cpp -o parser`  
    - run:   
    `./parser`  
+
   
 ### Lucernam olet. 
 General appraisal (from parser.hpp):
