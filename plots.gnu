@@ -1,7 +1,9 @@
 reset
 
-set output 'fig1.eps' 
-set term postscript eps size 3.13,2.34 enhanced color "Helvetica" 12
+#set output 'fig1.eps' 
+set output 'fig1.svg' 
+#set term postscript eps size 3.13,2.34 enhanced color "Helvetica" 12
+set term svg enhanced fname "Helvetica"
 set encoding utf8
 
 set logscale x 2
