@@ -193,11 +193,75 @@ struct LargeInputFileParserParametricPerformanceTestSuite : LargeFileWriterTestS
 {
     LargeInputFileParserParametricPerformanceTestSuite()
     {
+        auto now = chrono::system_clock::now();
+        auto in_time_t = chrono::system_clock::to_time_t(now);
+
+        stringstream today;
+        today << put_time(localtime(&in_time_t), "%Y-%m-%d %X");
+        static bool isFileCreated = false;
+        if(not isFileCreated)
+        {
+            outplot.open("Fig1.eps", ofstream::out | ofstream::trunc);
+            if(outplot)
+            {
+                outplot << "%!PS-Adobe-3.0" << endl << "%%BoundingBox: 0 0 595 842" << endl
+                        << "%%Copyright: (Michal 'DRINKer' Kozub)" << endl
+                        << "%%Creator: (parser.cpp)" << endl << "%%CreationDate: ("
+                        << today.str() << ")" << endl << "%%DocumentData: Clean7Bit" << endl
+                        << "%%Pages: 1" << endl << "%%For: the watch" << endl
+                        << "%%LanguageLevel: 1" << endl << "%%Orientation: landscape" << endl
+                        << "%%PageOrder: Ascend" << endl << "%%Title: (Fig.1 Time vs Set size)" << endl
+                        << "%%Version: 1.0" << endl << "%%DocumentNeededResources: font Times-Roman" << endl
+                        << "%%DocumentMedia: A4 842 1190 72 white ( )" << endl
+                        << "%%DocumentFonts: Times-Roman" << endl
+                        << "%%DocumentSuppliedResources: showpowa strhght invscale centrestr vertext extrcoords xtick ytick" << endl
+                        << "%%EndComments" << endl
+                        << "%%BeginProlog" << endl << "%%BeginResource: procset" << endl
+                        << "/showpowa % stk: string" << endl
+                        << "{0.04 1.02 moveto (x10) centrestr 0.01 0.015 rmoveto 0.8 0.8 scale centrestr 0.8 0.8 invscale} def " << endl
+                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                        << "/invscale % stk : x y" << endl
+                        << "{1 exch div exch 1 exch div exch scale} def" << endl
+                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                        << "/centrestr % stk : string" << endl
+                        << "{dup stringwidth pop dup 2 div exch sub 0 rmoveto show} def" << endl
+                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                        << "/singularBox {newpath 0 0 moveto 0 1 lineto 1 1 lineto 1 0 lineto closepath} def" << endl
+                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                        << "/vertex % stk : string x y" << endl
+                        << "{moveto gsave currentpoint translate 90 rotate centrestr grestore} def" << endl
+                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                        << "/extrcoords {dup coords exch get 1 add coords exch get} def" << endl
+                        <<  "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                        << "/xtick % stk : x" << endl
+                        << "{0 moveto 0 -0.02 rlineto -0.02 0 rmoveto stroke} def" << endl
+                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                        << "/ytick % stk : x y string" << endl
+                        << "{0 exch moveto -0.02 0 rlineto -0.02 0 rmoveto stroke} def" << endl
+                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                        << "/strhghtrel % stk : x" << endl << "{1 exch div scalefont} def" << endl
+                        << "%%EndResource" << endl << "%%EndProlog" << endl
+                        << "%%BeginSetup" << endl << "/Times-Roman findfont" << endl
+                        << "10 scalefont" << endl << "setfont" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
+                        << "%%EndSetup" << endl;
+                //EOF file header
+                outplot << "%%Page: Page1 1" << endl << "%%BeginPageSetup" << endl << "%%EndPageSetup" << endl
+                        << "1 1 scale" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
+                        << "0.005 setlinewidth" << endl
+                        << "newpath" << endl << "singularBox stroke" << endl << "" << endl
+                        << "showpage" << endl << "%%PageTrailer" << endl << "%%Trailer" << endl
+                        << "%%EOF" << endl;
+                isFileCreated = true;
+            }
+        }
     }
     virtual void TearDown() override
     {
         //remove(fileName.c_str());
     }
+
+    ofstream outplot{nullptr};
+
 
 };
 
