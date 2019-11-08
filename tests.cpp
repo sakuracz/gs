@@ -201,10 +201,10 @@ struct LargeInputFileParserParametricPerformanceTestSuite : LargeFileWriterTestS
         static bool isFileCreated = false;
         if(not isFileCreated)
         {
-            outplot.open("Fig1.eps", ofstream::out | ofstream::trunc);
+            outplot.open("Fig1.ps", ofstream::out | ofstream::trunc);
             if(outplot)
             {
-                outplot << "%!PS-Adobe-3.0" << endl << "%%BoundingBox: 0 0 595 842" << endl
+                outplot << "%!PS-Adobe-3.0" << endl << "%%BoundingBox: 0 0 1190 842" << endl
                         << "%%Copyright: (Michal 'DRINKer' Kozub)" << endl
                         << "%%Creator: (parser.cpp)" << endl << "%%CreationDate: ("
                         << today.str() << ")" << endl << "%%DocumentData: Clean7Bit" << endl
@@ -212,7 +212,7 @@ struct LargeInputFileParserParametricPerformanceTestSuite : LargeFileWriterTestS
                         << "%%LanguageLevel: 1" << endl << "%%Orientation: landscape" << endl
                         << "%%PageOrder: Ascend" << endl << "%%Title: (Fig.1 Time vs Set size)" << endl
                         << "%%Version: 1.0" << endl << "%%DocumentNeededResources: font Times-Roman" << endl
-                        << "%%DocumentMedia: A4 842 1190 72 white ( )" << endl
+                        << "%%DocumentMedia: A4 1190 842 72 white ( )" << endl
                         << "%%DocumentFonts: Times-Roman" << endl
                         << "%%DocumentSuppliedResources: showpowa strhght invscale centrestr vertext extrcoords xtick ytick" << endl
                         << "%%EndComments" << endl
@@ -231,7 +231,7 @@ struct LargeInputFileParserParametricPerformanceTestSuite : LargeFileWriterTestS
                         << "/vertex % stk : string x y" << endl
                         << "{moveto gsave currentpoint translate 90 rotate centrestr grestore} def" << endl
                         << "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/extrcoords {dup coords exch get 1 add coords exch get} def" << endl
+                        << "/extrcoords {dup coords exch get exch 1 add coords exch get} def" << endl
                         <<  "%%EndResource" << endl << "%%BeginResource: procset" << endl
                         << "/xtick % stk : x" << endl
                         << "{0 moveto 0 -0.02 rlineto -0.02 0 rmoveto stroke} def" << endl
@@ -245,10 +245,21 @@ struct LargeInputFileParserParametricPerformanceTestSuite : LargeFileWriterTestS
                         << "10 scalefont" << endl << "setfont" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
                         << "%%EndSetup" << endl;
                 //EOF file header
+                //PAGE content:
                 outplot << "%%Page: Page1 1" << endl << "%%BeginPageSetup" << endl << "%%EndPageSetup" << endl
-                        << "1 1 scale" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
+                        << "40 40 translate" << endl
+                        << "1110 762 scale" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
                         << "0.005 setlinewidth" << endl
                         << "newpath" << endl << "singularBox stroke" << endl << "" << endl
+                        << "/coords [" << endl << " ] def" << endl
+                        << "stroke" << endl
+                //TITLE:
+                        << "/Times-Roman findfont 25 strhghtrel setfont" << endl
+                        << "0.5 1.01 moveto" << endl << "gsave" << endl
+                        << "1110 762 invscale" << endl << "762 762 scale" << endl
+                        << "(Time vs Set size) centrestr" << endl
+                        << "grestore" << endl
+                //TRAILER
                         << "showpage" << endl << "%%PageTrailer" << endl << "%%Trailer" << endl
                         << "%%EOF" << endl;
                 isFileCreated = true;
