@@ -192,88 +192,11 @@ struct LargeInputFileParserParametricPerformanceTestSuite : LargeFileWriterTestS
                                                             WithParamInterface<PerfParam>
 {
     LargeInputFileParserParametricPerformanceTestSuite()
-    {
-        auto now = chrono::system_clock::now();
-        auto in_time_t = chrono::system_clock::to_time_t(now);
-
-        stringstream today;
-        today << put_time(localtime(&in_time_t), "%Y-%m-%d %X");
-        static bool isFileCreated = false;
-        if(not isFileCreated)
-        {
-            outplot.open("Fig1.ps", ofstream::out | ofstream::trunc);
-            if(outplot)
-            {
-                outplot << "%!PS-Adobe-3.0" << endl << "%%BoundingBox: 0 0 1190 842" << endl
-                        << "%%Copyright: (Michal 'DRINKer' Kozub)" << endl
-                        << "%%Creator: (parser.cpp)" << endl << "%%CreationDate: ("
-                        << today.str() << ")" << endl << "%%DocumentData: Clean7Bit" << endl
-                        << "%%Pages: 1" << endl << "%%For: the watch" << endl
-                        << "%%LanguageLevel: 1" << endl << "%%Orientation: landscape" << endl
-                        << "%%PageOrder: Ascend" << endl << "%%Title: (Fig.1 Time vs Set size)" << endl
-                        << "%%Version: 1.0" << endl << "%%DocumentNeededResources: font Times-Roman" << endl
-                        << "%%DocumentMedia: A4 1190 842 72 white ( )" << endl
-                        << "%%DocumentFonts: Times-Roman" << endl
-                        << "%%DocumentSuppliedResources: showpowa strhght invscale centrestr vertext extrcoords xtick ytick" << endl
-                        << "%%EndComments" << endl
-                        << "%%BeginProlog" << endl << "%%BeginResource: procset" << endl
-                        << "/showpowa % stk: string" << endl
-                        << "{0.04 1.02 moveto (x10) centrestr 0.01 0.015 rmoveto 0.8 0.8 scale centrestr 0.8 0.8 invscale} def " << endl
-                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/invscale % stk : x y" << endl
-                        << "{1 exch div exch 1 exch div exch scale} def" << endl
-                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/centrestr % stk : string" << endl
-                        << "{dup stringwidth pop dup 2 div exch sub 0 rmoveto show} def" << endl
-                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/singularBox {newpath 0 0 moveto 0 1 lineto 1 1 lineto 1 0 lineto closepath} def" << endl
-                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/vertex % stk : string x y" << endl
-                        << "{moveto gsave currentpoint translate 90 rotate centrestr grestore} def" << endl
-                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/extrcoords {dup coords exch get exch 1 add coords exch get} def" << endl
-                        <<  "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/xtick % stk : x" << endl
-                        << "{0 moveto 0 -0.02 rlineto -0.02 0 rmoveto stroke} def" << endl
-                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/ytick % stk : x y string" << endl
-                        << "{0 exch moveto -0.02 0 rlineto -0.02 0 rmoveto stroke} def" << endl
-                        << "%%EndResource" << endl << "%%BeginResource: procset" << endl
-                        << "/strhghtrel % stk : x" << endl << "{1 exch div scalefont} def" << endl
-                        << "%%EndResource" << endl << "%%EndProlog" << endl
-                        << "%%BeginSetup" << endl << "/Times-Roman findfont" << endl
-                        << "10 scalefont" << endl << "setfont" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
-                        << "%%EndSetup" << endl;
-                //EOF file header
-                //PAGE content:
-                outplot << "%%Page: Page1 1" << endl << "%%BeginPageSetup" << endl << "%%EndPageSetup" << endl
-                        << "40 40 translate" << endl
-                        << "1110 762 scale" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
-                        << "0.005 setlinewidth" << endl
-                        << "newpath" << endl << "singularBox stroke" << endl << "" << endl
-                        << "/coords [" << endl << " ] def" << endl
-                        << "stroke" << endl
-                //TITLE:
-                        << "/Times-Roman findfont 25 strhghtrel setfont" << endl
-                        << "0.5 1.01 moveto" << endl << "gsave" << endl
-                        << "1110 762 invscale" << endl << "762 762 scale" << endl
-                        << "(Time vs Set size) centrestr" << endl
-                        << "grestore" << endl
-                //TRAILER
-                        << "showpage" << endl << "%%PageTrailer" << endl << "%%Trailer" << endl
-                        << "%%EOF" << endl;
-                isFileCreated = true;
-            }
-        }
-    }
+    {}
     virtual void TearDown() override
     {
         //remove(fileName.c_str());
     }
-
-    ofstream outplot{nullptr};
-
-
 };
 
 INSTANTIATE_TEST_CASE_P(PerfTest, LargeInputFileParserParametricPerformanceTestSuite,
@@ -311,11 +234,110 @@ TEST_P(LargeInputFileParserParametricPerformanceTestSuite, performLargePrintsTes
     auto productEnd = std::chrono::system_clock::now();
     auto productTime = std::chrono::duration_cast<std::chrono::nanoseconds>(productEnd - productStart);
 
-    cerr << param.fileSize << "\t" << readTime.count() << "\t" << printTime.count() << "\t" << productTime.count() << endl;
+    //cerr << param.fileSize << "\t" << readTime.count() << "\t" << printTime.count() << "\t" << productTime.count() << endl;
+
+    SUCCEED() << param.fileSize << " " << readTime.count() << " " << productTime.count() << " " << printTime.count() << endl;
 }
+
+class FigPlotter : public EmptyTestEventListener {
+public:
+    FigPlotter()
+    {
+        auto now = chrono::system_clock::now();
+        auto in_time_t = chrono::system_clock::to_time_t(now);
+
+        stringstream today;
+        today << put_time(localtime(&in_time_t), "%Y-%m-%d %X");
+        outplot.open("Fig1.ps", ofstream::out | ofstream::trunc);
+        if(outplot)
+        {
+            outplot << "%!PS-Adobe-3.0" << endl << "%%BoundingBox: 0 0 1190 842" << endl
+                    << "%%Copyright: (Michal 'DRINKer' Kozub)" << endl
+                    << "%%Creator: (parser.cpp)" << endl << "%%CreationDate: ("
+                    << today.str() << ")" << endl << "%%DocumentData: Clean7Bit" << endl
+                    << "%%Pages: 1" << endl << "%%For: the watch" << endl
+                    << "%%LanguageLevel: 1" << endl << "%%Orientation: landscape" << endl
+                    << "%%PageOrder: Ascend" << endl << "%%Title: (Fig.1 Time vs Set size)" << endl
+                    << "%%Version: 1.0" << endl << "%%DocumentNeededResources: font Times-Roman" << endl
+                    << "%%DocumentMedia: A4 1190 842 72 white ( )" << endl
+                    << "%%DocumentFonts: Times-Roman" << endl
+                    << "%%DocumentSuppliedResources: showpowa strhght invscale centrestr vertext extrcoords xtick ytick" << endl
+                    << "%%EndComments" << endl
+                    << "%%BeginProlog" << endl << "%%BeginResource: procset" << endl
+                    << "/showpowa % stk: string" << endl
+                    << "{0.04 1.02 moveto (x10) centrestr 0.01 0.015 rmoveto 0.8 0.8 scale centrestr 0.8 0.8 invscale} def " << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/invscale % stk : x y" << endl
+                    << "{1 exch div exch 1 exch div exch scale} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/centrestr % stk : string" << endl
+                    << "{dup stringwidth pop dup 2 div exch sub 0 rmoveto show} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/singularBox {newpath 0 0 moveto 0 1 lineto 1 1 lineto 1 0 lineto closepath} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/vertex % stk : string x y" << endl
+                    << "{moveto gsave currentpoint translate 90 rotate centrestr grestore} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/extrcoords {dup coords exch get exch 1 add coords exch get} def" << endl
+                    <<  "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/xtick % stk : x" << endl
+                    << "{0 moveto 0 -0.02 rlineto -0.02 0 rmoveto stroke} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/ytick % stk : x y string" << endl
+                    << "{0 exch moveto -0.02 0 rlineto -0.02 0 rmoveto stroke} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/strhghtrel % stk : x" << endl << "{1 exch div scalefont} def" << endl
+                    << "%%EndResource" << endl << "%%EndProlog" << endl
+                    << "%%BeginSetup" << endl << "/Times-Roman findfont" << endl
+                    << "10 scalefont" << endl << "setfont" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
+                    << "%%EndSetup" << endl;
+            //EOF file header
+            //PAGE content:
+            outplot << "%%Page: Page1 1" << endl << "%%BeginPageSetup" << endl << "%%EndPageSetup" << endl
+                    << "40 40 translate" << endl
+                    << "1110 762 scale" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
+                    << "0.005 setlinewidth" << endl
+                    << "newpath" << endl << "singularBox stroke" << endl << "" << endl
+                    << "/coords [" << endl;
+
+        }
+    }
+    ~FigPlotter() override
+    {
+        if(outplot)
+        {
+            outplot << " ] def" << endl << "stroke" << endl
+            //TITLE:
+                    << "/Times-Roman findfont 25 strhghtrel setfont" << endl
+                    << "0.5 1.01 moveto" << endl << "gsave" << endl
+                    << "1110 762 invscale" << endl << "762 762 scale" << endl
+                    << "(Time vs Set size) centrestr" << endl
+                    << "grestore" << endl
+            //TRAILER
+                    << "showpage" << endl << "%%PageTrailer" << endl << "%%Trailer" << endl
+                    << "%%EOF" << endl;
+            outplot.close();
+        }
+    }
+private:
+    ofstream outplot{nullptr};
+    void OnTestPartResult(const TestPartResult& test_part_result) override {
+        if(outplot)
+        {
+            cerr << "Summary: " << test_part_result.summary();
+            outplot << test_part_result.summary();
+        }
+    }
+};
 
 int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    UnitTest& unit_test = *UnitTest::GetInstance();
+    TestEventListeners& listeners = unit_test.listeners();
+    //delete listeners.Release(listeners.default_result_printer());
+    FigPlotter plotter;
+    listeners.Append(&plotter);
+    auto ret = RUN_ALL_TESTS();
+    return ret;
 }
