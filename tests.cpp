@@ -288,6 +288,43 @@ public:
                     << "%%EndResource" << endl << "%%BeginResource: procset" << endl
                     << "/strhghtrel % stk : x" << endl << "{1 exch div scalefont} def" << endl
                     << "%%EndResource" << endl << "%%EndProlog" << endl
+                    << "%%BeginResource: procset" << endl << "/findCol1Max % stk : array" << endl
+                    << "{ dup 0 get exch dup length 1 sub 4 4 3 2 roll {1 index exch get 3 2 roll 2 copy gt {pop}{exch pop} ifelse exch} for pop} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/findCol2Max % stk : array" << endl
+                    << "{ dup 1 get exch dup length 1 sub 5 4 3 2 roll {1 index exch get 3 2 roll 2 copy gt {pop}{exch pop} ifelse exch} for pop} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/DrawX % stk : x y" << endl
+                    << "{ newpath moveto 0.005 0.005 rmoveto -0.01 -0.01 rlineto 0.01 0 rmoveto -0.01 0.01 rlineto stroke } def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/DrawPlus % stk : x y" << endl
+                    << "{ newpath moveto 0 0.005 rmoveto 0 -0.01 rlineto 0.005 0.005 rmoveto -0.01 0 rlineto stroke } def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/DrawO % stk : x y" << endl << "{ newpath 0.005 0 360 arc stroke } def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/PlotCol2vs1 % stk : array" << endl
+                    << "{dup 1 0 0 setrgbcolor 0.002 setlinewidth findCol1Max exch dup findCol2Max exch dup length 1 sub 0 4 3 2 roll {dup 1 add exch 2 index exch get exch 2 index exch get 3 index div exch 4 index div exch DrawX} for 3 {pop} repeat } def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/PlotCol3vs1 % stk : array" << endl
+                    << "{dup 0 1 0 setrgbcolor 0.002 setlinewidth findCol1Max exch dup findCol2Max exch dup length 1 sub 0 4 3 2 roll {dup 2 add exch 2 index exch get exch 2 index exch get 3 index div exch 4 index div exch DrawPlus} for 3 {pop} repeat } def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/LogplotCol2vs1 % stk : array" << endl
+                    << "{dup 1 0 0 setrgbcolor 0.002 setlinewidth findCol1Max log2 exch dup findCol2Max log exch dup length 1 sub 0 4 3 2 roll {dup 1 add exch 2 index exch get exch 2 index exch get log 3 index div exch log2 4 index div exch DrawX} for 3 {pop} repeat } def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/LogplotCol3vs1 % stk : array" << endl
+                    << "{dup 0 1 0 setrgbcolor 0.002 setlinewidth findCol1Max log2 exch dup findCol2Max log exch dup length 1 sub 0 4 3 2 roll {dup 2 add exch 2 index exch get exch 2 index exch get log 3 index div exch log2 4 index div exch DrawPlus} for 3 {pop} repeat } def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/LogplotCol4vs1 % stk : array" << endl
+                    << "{dup 0 0 1 setrgbcolor 0.002 setlinewidth findCol1Max log2 exch dup findCol2Max log exch dup length 1 sub 0 4 3 2 roll {dup 3 add exch 2 index exch get exch 2 index exch get log 3 index div exch log2 4 index div exch DrawO} for 3 {pop} repeat } def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/log2% stk : x" << endl << "{log 2 log div} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/DrawXTics % stk : log2(maxX)" << endl
+                    << "{0 0 0 setrgbcolor 0.002 setlinewidth newpath dup 0 2 3 2 roll {1 index div 0 moveto 0 0.025 rlineto} for pop stroke} def" << endl
+                    << "%%EndResource" << endl << "%%BeginResource: procset" << endl
+                    << "/DrawMajorYTics % stk : log(maxY)" << endl
+                    << "{0 0 0 setrgbcolor 0.003 setlinewidth newpath dup 0 1 3 2 roll {1 index div 0 exch moveto 0.015 0 rlineto} for pop stroke} def" << endl
+                    << "%%EndResource"
                     << "%%BeginSetup" << endl << "/Times-Roman findfont" << endl
                     << "10 scalefont" << endl << "setfont" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
                     << "%%EndSetup" << endl;
@@ -298,22 +335,35 @@ public:
                     << "1110 762 scale" << endl << "0.0 0.0 0.0 setrgbcolor" << endl
                     << "0.005 setlinewidth" << endl
                     << "newpath" << endl << "singularBox stroke" << endl << "" << endl
-                    << "/coords [" << endl;
 
+            //TITLE and captions:
+                    << "/Times-Roman findfont 25 strhghtrel setfont" << endl
+                    << "0.5 1.01 moveto" << endl << "gsave" << endl
+                    << "1110 762 invscale" << endl << "762 762 scale" << endl
+                    << "(Time vs Set size) centrestr" << endl << "grestore" << endl
+                    << "0.5 -0.04 moveto" << endl << "gsave" << endl
+                    << "1110 762 invscale" << endl << "762 762 scale" << endl
+                    << "(Set size [B]) centrestr" << endl << "grestore" << endl
+                    << "-0.01 0.5 moveto" << endl << "gsave" << endl
+                    << "1110 762 invscale" << endl << "762 762 scale" << endl
+                    << "90 rotate" << endl << "(Time [ns]) centrestr" << endl
+                    << "grestore" << endl << endl
+            //DATA:
+                    << "/coords [" << endl;
         }
     }
     ~FigPlotter() override
     {
         if(outplot)
         {
-            outplot << " ] def" << endl << "stroke" << endl
-            //TITLE:
-                    << "/Times-Roman findfont 25 strhghtrel setfont" << endl
-                    << "0.5 1.01 moveto" << endl << "gsave" << endl
-                    << "1110 762 invscale" << endl << "762 762 scale" << endl
-                    << "(Time vs Set size) centrestr" << endl
-                    << "grestore" << endl
-            //TRAILER
+            outplot << " ] def" << endl << endl
+            //PLOT creation:
+                    << "coords findCol1Max log2 DrawXTics" << endl
+                    << "coords findCol2Max log DrawMajorYTics" << endl
+                    << "coords LogplotCol2vs1" << endl
+                    << "coords LogplotCol3vs1" << endl
+                    << "coords LogplotCol4vs1" << endl << endl
+            //TRAILER:
                     << "showpage" << endl << "%%PageTrailer" << endl << "%%Trailer" << endl
                     << "%%EOF" << endl;
             outplot.close();
@@ -324,8 +374,13 @@ private:
     void OnTestPartResult(const TestPartResult& test_part_result) override {
         if(outplot)
         {
-            cerr << "Summary: " << test_part_result.summary();
-            outplot << test_part_result.summary();
+            //cerr << "Summary: " << test_part_result.summary();
+            stringstream sum;
+            sum << test_part_result.summary();
+            string suc{};
+            long size, t1, t2, t3;
+            sum >> suc >> size >> t1 >> t2 >> t3;
+            outplot << size << " " << t1 << " " << t2 << " " << t3 << endl;
         }
     }
 };
@@ -336,8 +391,8 @@ int main(int argc, char **argv)
     UnitTest& unit_test = *UnitTest::GetInstance();
     TestEventListeners& listeners = unit_test.listeners();
     //delete listeners.Release(listeners.default_result_printer());
-    FigPlotter plotter;
-    listeners.Append(&plotter);
+    //FigPlotter plotter;
+    listeners.Append(new FigPlotter());
     auto ret = RUN_ALL_TESTS();
     return ret;
 }
